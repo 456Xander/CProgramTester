@@ -18,6 +18,7 @@ public class Utils {
 	static {
 		isMakeInPath();
 	}
+
 	/**
 	 * detect the operating system from the os.name System property and cache the
 	 * result
@@ -47,8 +48,11 @@ public class Utils {
 			makeCommand = "make";
 		} catch (IOException e) {
 			try {
-				p = Runtime.getRuntime().exec("mingw32-make -v");
-				makeCommand = "mingw32-make";
+				if (getOperatingSystemType() == OSType.Windows) {
+					p = Runtime.getRuntime().exec("mingw32-make -v");
+					makeCommand = "mingw32-make";
+					return true;
+				}
 			} catch (IOException e1) {
 				return false;
 			}
@@ -58,7 +62,6 @@ public class Utils {
 			int returnCode = p.waitFor();
 			return returnCode == 0;
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
