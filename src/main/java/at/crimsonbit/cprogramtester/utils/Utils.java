@@ -14,6 +14,7 @@ public class Utils {
 
 	// cached result of OS detection
 	protected static OSType detectedOS;
+	protected static String makeCommand;
 
 	/**
 	 * detect the operating system from the os.name System property and cache the
@@ -41,7 +42,17 @@ public class Utils {
 		try {
 			Process p = Runtime.getRuntime().exec("make -v");
 			int returnCode = p.waitFor();
-			return returnCode == 0;
+			if (returnCode != 0) {
+				p = Runtime.getRuntime().exec("mingw32-make -v");
+				returnCode = p.waitFor();
+				if (returnCode == 0) {
+					makeCommand = "mingw32-make";
+					return true;
+				}
+			} else {
+				makeCommand = "make";
+				return true;
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
