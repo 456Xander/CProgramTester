@@ -1,5 +1,6 @@
 package at.crimsonbit.cprogramtester.utils;
 
+import java.io.IOException;
 import java.util.Locale;
 
 public class Utils {
@@ -33,5 +34,20 @@ public class Utils {
 			}
 		}
 		return detectedOS;
+	}
+
+	public static boolean isMakeInPath() {
+		try {
+			Process p = Runtime.getRuntime().exec("make -v");
+			int returnCode = p.waitFor();
+			return returnCode == 0;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
