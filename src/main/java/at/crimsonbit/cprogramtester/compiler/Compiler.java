@@ -42,7 +42,7 @@ public class Compiler {
 
 		try {
 			Process makeProcess = Runtime.getRuntime()
-					.exec(new String[] { Utils.makeCommand, "-C", project.getFolder().getAbsolutePath() });
+					.exec(new String[] { Utils.makeCommand, "-C", project.getFolder().getAbsolutePath(), "--dry-run" });
 
 			Thread a = new Thread(() -> {
 				try (BufferedInputStream errorStream = new BufferedInputStream(makeProcess.getErrorStream())) {
@@ -64,13 +64,12 @@ public class Compiler {
 			a.interrupt();
 			b.interrupt();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
+			
 			System.out.println(normal.toString());
 		}
 
