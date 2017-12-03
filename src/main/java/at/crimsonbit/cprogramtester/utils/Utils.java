@@ -15,7 +15,9 @@ public class Utils {
 	// cached result of OS detection
 	protected static OSType detectedOS;
 	public static String makeCommand;
-
+	static {
+		isMakeInPath();
+	}
 	/**
 	 * detect the operating system from the os.name System property and cache the
 	 * result
