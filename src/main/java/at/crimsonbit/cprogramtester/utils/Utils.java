@@ -39,23 +39,22 @@ public class Utils {
 	}
 
 	public static boolean isMakeInPath() {
+		Process p = null;
 		try {
-			Process p = Runtime.getRuntime().exec("make -v");
-			int returnCode = p.waitFor();
-			if (returnCode != 0) {
-				p = Runtime.getRuntime().exec("mingw32-make -v");
-				returnCode = p.waitFor();
-				if (returnCode == 0) {
-					makeCommand = "mingw32-make";
-					return true;
-				}
-			} else {
-				makeCommand = "make";
-				return true;
-			}
+			p = Runtime.getRuntime().exec("make -v");
+			makeCommand = "make";
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			try {
+				p = Runtime.getRuntime().exec("mingw32-make -v");
+				makeCommand = "mingw32-make";
+			} catch (IOException e1) {
+				return false;
+			}
 			e.printStackTrace();
+		}
+		try {
+			int returnCode = p.waitFor();
+			return returnCode == 0;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
