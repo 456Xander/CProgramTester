@@ -4,6 +4,7 @@ import java.io.File;
 
 public class Project {
 	private File folder;
+	private String mainFile;
 
 	public Project(File folder) {
 		this.folder = folder;

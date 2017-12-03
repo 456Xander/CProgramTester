@@ -1,6 +1,6 @@
 NAME = test
 SRC = $(wildcard *.c)
-OBJ = $(patsubst %.c %.o)
+OBJ = $(patsubst %.c,%.o,$(SRC))
 
 all: $(OBJ)
 	gcc $(OBJ) -o $(NAME).exe

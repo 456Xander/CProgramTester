@@ -56,9 +56,7 @@ public class Compiler {
 				StringBuilder sb = new StringBuilder();
 				byte[] buff = new byte[512];
 				try {
-					while (errorStream.read(buff) > 0) {
-						sb.append(new String(buff));
-					}
+					Utils.appendAllToStringBuilder(sb, errorStream);
 				} catch (IOException e) {
 					throw new MakeErrorException("Make not successfull: returnCode=" + returnCode);
 				}

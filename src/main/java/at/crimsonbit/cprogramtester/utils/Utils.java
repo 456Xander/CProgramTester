@@ -1,6 +1,7 @@
 package at.crimsonbit.cprogramtester.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 public class Utils {
@@ -49,5 +50,12 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public static void appendAllToStringBuilder(StringBuilder sb, InputStream stream) throws IOException {
+		byte[] buff = new byte[512];
+		while (stream.read(buff) > 0) {
+			sb.append(new String(buff));
+		}
 	}
 }
