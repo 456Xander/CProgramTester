@@ -41,7 +41,8 @@ public class Compiler {
 		BufferedInputStream errorStream = null;
 		try {
 			try {
-				Process makeProcess = Runtime.getRuntime().exec(Utils.makeCommand + " -C " + project.getFolder());
+				Process makeProcess = Runtime.getRuntime()
+						.exec(new String[] { Utils.makeCommand, "-C", project.getFolder().getAbsolutePath() });
 				errorStream = new BufferedInputStream(makeProcess.getErrorStream());
 				returnCode = makeProcess.waitFor();
 			} catch (IOException e) {

@@ -49,12 +49,18 @@ public class Utils {
 		} catch (IOException e) {
 			try {
 				if (getOperatingSystemType() == OSType.Windows) {
-					p = Runtime.getRuntime().exec("mingw32-make -v");
+					p = Runtime.getRuntime().exec(new String[] { "mingw32-make", "-v" });
 					makeCommand = "mingw32-make";
 					return true;
 				}
 			} catch (IOException e1) {
-				return false;
+				try {
+					p = Runtime.getRuntime().exec(new String[] { "C:/Program Files (x86)/CodeBlocks/MinGW/bin/mingw32-make", "-v" });
+				} catch (IOException e2) {
+					return false;
+				}
+				makeCommand = "C:/Program Files (x86)/CodeBlocks/MinGW/bin/mingw32-make";
+				return true;
 			}
 			e.printStackTrace();
 		}
