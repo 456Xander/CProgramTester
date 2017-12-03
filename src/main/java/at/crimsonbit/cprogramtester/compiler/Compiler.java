@@ -70,6 +70,9 @@ public class Compiler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally {
+			System.out.println(normal.toString());
+		}
 
 		if (returnCode != 0) {
 			throw new MakeErrorException(
