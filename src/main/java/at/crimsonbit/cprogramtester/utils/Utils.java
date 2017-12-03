@@ -55,7 +55,8 @@ public class Utils {
 				}
 			} catch (IOException e1) {
 				try {
-					p = Runtime.getRuntime().exec(new String[] { "C:/Program Files (x86)/CodeBlocks/MinGW/bin/mingw32-make", "-v" });
+					p = Runtime.getRuntime()
+							.exec(new String[] { "C:/Program Files (x86)/CodeBlocks/MinGW/bin/mingw32-make", "-v" });
 				} catch (IOException e2) {
 					return false;
 				}
@@ -77,6 +78,15 @@ public class Utils {
 		byte[] buff = new byte[512];
 		while (stream.read(buff) > 0) {
 			sb.append(new String(buff));
+		}
+	}
+
+	public static void appendAllToStringBuffer(StringBuffer sb, InputStream stream) throws IOException {
+		byte[] buff = new byte[512];
+		while (!Thread.interrupted()) {
+			int len = stream.read(buff);
+			if (len > 0)
+				sb.append(new String(buff));
 		}
 	}
 }

@@ -38,40 +38,42 @@ public class Compiler {
 			}
 		}
 		int returnCode = -1;
-		BufferedInputStream errorStream = null;
-		try {
-			try {
-				Process makeProcess = Runtime.getRuntime()
-						.exec(new String[] { Utils.makeCommand, "-C", project.getFolder().getAbsolutePath() });
-				errorStream = new BufferedInputStream(makeProcess.getErrorStream());
-				returnCode = makeProcess.waitFor();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		StringBuffer error = new StringBuffer(), normal = new StringBuffer();
 
-			if (returnCode != 0) {
-				StringBuilder sb = new StringBuilder();
-				byte[] buff = new byte[512];
-				try {
-					Utils.appendAllToStringBuilder(sb, errorStream);
-				} catch (IOException e) {
-					throw new MakeErrorException("Make not successfull: returnCode=" + returnCode);
-				}
-				throw new MakeErrorException(
-						"Make not successfull: returnCode=" + returnCode + " errorOutput:" + sb.toString());
-			}
-		} finally {
-			if (errorStream != null) {
-				try {
-					errorStream.close();
+		try {
+			Process makeProcess = Runtime.getRuntime()
+					.exec(new String[] { Utils.makeCommand, "-C", project.getFolder().getAbsolutePath() });
+
+			Thread a = new Thread(() -> {
+				try (BufferedInputStream errorStream = new BufferedInputStream(makeProcess.getErrorStream())) {
+					Utils.appendAllToStringBuffer(error, errorStream);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
+			});;
+			Thread b = new Thread(() -> {
+				try (BufferedInputStream outStream = new BufferedInputStream(makeProcess.getInputStream())) {
+					Utils.appendAllToStringBuffer(normal, outStream);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+			a.start();
+			b.start();
+			returnCode = makeProcess.waitFor();
+			a.interrupt();
+			b.interrupt();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (returnCode != 0) {
+			throw new MakeErrorException(
+					"Make not successfull: returnCode=" + returnCode + " errorOutput:" + error.toString());
 		}
 
 		return 0;
